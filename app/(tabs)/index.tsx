@@ -1,9 +1,30 @@
-import { StyleSheet, Text, View, ScrollView, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Animated, Easing } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import { useEffect, useRef } from 'react';
 
 export default function HomeScreen() {
   const router = useRouter();
+  const scaleAnim = useRef(new Animated.Value(1)).current;
+
+  useEffect(() => {
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(scaleAnim, {
+          toValue: 1.1,
+          duration: 1000,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: true,
+        }),
+        Animated.timing(scaleAnim, {
+          toValue: 1,
+          duration: 1000,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: true,
+        }),
+      ])
+    ).start();
+  }, [scaleAnim]);
 
   return (
     <View style={styles.container}>
@@ -42,42 +63,30 @@ export default function HomeScreen() {
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Quick Actions</Text>
           <View style={styles.actionGrid}>
-            <TouchableOpacity 
-              style={styles.actionCard}
-              onPress={() => router.push('/scan')}
-            >
+            <TouchableOpacity style={styles.actionCard} onPress={() => router.push('/scan')}>
               <View style={[styles.actionIcon, { backgroundColor: '#EEF2FF' }]}>
                 <Ionicons name="scan" size={28} color="#1E40AF" />
               </View>
               <Text style={styles.actionText}>Scan SMS</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity 
-              style={styles.actionCard}
-              onPress={() => router.push('/scan')}
-            >
+            <TouchableOpacity style={styles.actionCard} onPress={() => router.push('/scan')}>
               <View style={[styles.actionIcon, { backgroundColor: '#F0FDF4' }]}>
                 <Ionicons name="image" size={28} color="#10B981" />
               </View>
               <Text style={styles.actionText}>Scan Image</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity 
-              style={styles.actionCard}
-              onPress={() => router.push('/trends')}
-            >
-              <View style={[styles.actionIcon, { backgroundColor: '#FEF3C7' }]}>
-                <Ionicons name="trending-up" size={28} color="#F59E0B" />
+            <TouchableOpacity style={styles.actionCard} onPress={() => router.push('/report')}>
+              <View style={[styles.actionIcon, { backgroundColor: '#FEE2E2' }]}>
+                <Ionicons name="alert-circle" size={28} color="#DC2626" />
               </View>
-              <Text style={styles.actionText}>View Trends</Text>
+              <Text style={styles.actionText}>Report Scam</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity 
-              style={styles.actionCard}
-              onPress={() => router.push('/alerts')}
-            >
-              <View style={[styles.actionIcon, { backgroundColor: '#FEE2E2' }]}>
-                <Ionicons name="notifications" size={28} color="#EF4444" />
+            <TouchableOpacity style={styles.actionCard} onPress={() => router.push('/alerts')}>
+              <View style={[styles.actionIcon, { backgroundColor: '#FEF3C7' }]}>
+                <Ionicons name="notifications" size={28} color="#F59E0B" />
               </View>
               <Text style={styles.actionText}>Alerts</Text>
             </TouchableOpacity>
@@ -134,23 +143,19 @@ export default function HomeScreen() {
         </View>
       </ScrollView>
 
-      {/* Elder Friendly Easy Mode Button - Floating */}
-      <TouchableOpacity 
-        style={styles.magnifiedButton}
-        onPress={() => router.push('/easyMode')}
-      >
-        <Ionicons name="accessibility" size={36} color="#fff" style={{ marginRight: 10 }} />
-        <Text style={styles.magnifiedButtonText}>👵 Easy Mode</Text>
-      </TouchableOpacity>
+      {/* Elder Friendly Easy Mode Button with Pulse Animation */}
+      <Animated.View style={[styles.magnifiedButton, { transform: [{ scale: scaleAnim }] }]}>
+        <TouchableOpacity style={styles.magnifiedInner} onPress={() => router.push('/easyMode')}>
+          <Ionicons name="accessibility" size={36} color="#fff" style={{ marginRight: 10 }} />
+          <Text style={styles.magnifiedButtonText}>👵 Easy Mode</Text>
+        </TouchableOpacity>
+      </Animated.View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#F9FAFB',
-  },
+  container: { flex: 1, backgroundColor: '#F9FAFB' },
   heroCard: {
     backgroundColor: '#1E40AF',
     margin: 16,
@@ -170,32 +175,15 @@ const styles = StyleSheet.create({
   },
   heroTitle: { fontSize: 28, fontWeight: 'bold', color: '#fff', marginBottom: 8 },
   heroSubtitle: { fontSize: 14, color: 'rgba(255,255,255,0.8)' },
-  statsContainer: {
-    flexDirection: 'row',
-    paddingHorizontal: 16,
-    gap: 12,
-    marginBottom: 24,
-  },
-  statCard: {
-    flex: 1,
-    backgroundColor: '#fff',
-    padding: 16,
-    borderRadius: 12,
-    alignItems: 'center',
-  },
+  statsContainer: { flexDirection: 'row', paddingHorizontal: 16, gap: 12, marginBottom: 24 },
+  statCard: { flex: 1, backgroundColor: '#fff', padding: 16, borderRadius: 12, alignItems: 'center' },
   statNumber: { fontSize: 24, fontWeight: 'bold', color: '#1F2937', marginBottom: 4 },
   statLabel: { fontSize: 11, color: '#6B7280', textAlign: 'center' },
   statIcon: { marginTop: 8 },
   section: { paddingHorizontal: 16, marginBottom: 24 },
   sectionTitle: { fontSize: 20, fontWeight: 'bold', color: '#1F2937', marginBottom: 12 },
   actionGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 12 },
-  actionCard: {
-    width: '47%',
-    backgroundColor: '#fff',
-    padding: 20,
-    borderRadius: 12,
-    alignItems: 'center',
-  },
+  actionCard: { width: '47%', backgroundColor: '#fff', padding: 20, borderRadius: 12, alignItems: 'center' },
   actionIcon: {
     width: 56,
     height: 56,
@@ -233,29 +221,28 @@ const styles = StyleSheet.create({
   tipTitle: { fontSize: 14, fontWeight: 'bold', color: '#92400E', marginBottom: 4 },
   tipText: { fontSize: 13, color: '#78350F', lineHeight: 18 },
 
-  // Easy Mode Button
+  // Animated Easy Mode Button
   magnifiedButton: {
     position: 'absolute',
     bottom: 30,
     left: 20,
     right: 20,
-    flexDirection: 'row',
-    backgroundColor: '#16A34A', // bright green
-    paddingVertical: 24,
-    paddingHorizontal: 32,
-    borderRadius: 50,
-    alignItems: 'center',
-    justifyContent: 'center',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 6 },
     shadowOpacity: 0.25,
     shadowRadius: 8,
     elevation: 6,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  magnifiedButtonText: {
-    fontSize: 26,
-    fontWeight: 'bold',
-    color: '#fff',
-    textAlign: 'center',
+  magnifiedInner: {
+    flexDirection: 'row',
+    backgroundColor: '#16A34A',
+    paddingVertical: 24,
+    paddingHorizontal: 32,
+    borderRadius: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
+  magnifiedButtonText: { fontSize: 26, fontWeight: 'bold', color: '#fff' },
 });
