@@ -1,20 +1,23 @@
+// app/(tabs)/easyMode.tsx
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
+import { useLanguage } from '../../src/context/LanguageContext';
 
 export default function EasyMode() {
   const router = useRouter();
+  const { t } = useLanguage();
   const [largeText, setLargeText] = useState(true);
   const [highContrast, setHighContrast] = useState(false);
 
   return (
     <ScrollView style={[styles.container, highContrast && { backgroundColor: '#000' }]}>
       <Text style={[styles.title, largeText && { fontSize: 32 }, highContrast && { color: '#fff' }]}>
-        👵 Easy Mode
+        {t.easyMode.title}
       </Text>
       <Text style={[styles.subtitle, largeText && { fontSize: 22 }, highContrast && { color: '#fff' }]}>
-        All features in one place
+        {t.easyMode.subtitle}
       </Text>
 
       {/* Scan SMS */}
@@ -23,7 +26,9 @@ export default function EasyMode() {
         onPress={() => router.push('/scan')}
       >
         <Ionicons name="chatbubble-ellipses" size={50} color="#fff" />
-        <Text style={[styles.featureText, largeText && { fontSize: 26 }]}>Scan SMS</Text>
+        <Text style={[styles.featureText, largeText && { fontSize: 26 }]}>
+          {t.easyMode.scanSMS}
+        </Text>
       </TouchableOpacity>
 
       {/* Scan Image */}
@@ -32,16 +37,20 @@ export default function EasyMode() {
         onPress={() => router.push('/scan')}
       >
         <Ionicons name="image" size={50} color="#fff" />
-        <Text style={[styles.featureText, largeText && { fontSize: 26 }]}>Scan Image</Text>
+        <Text style={[styles.featureText, largeText && { fontSize: 26 }]}>
+          {t.easyMode.scanImage}
+        </Text>
       </TouchableOpacity>
 
       {/* View Trends */}
       <TouchableOpacity 
         style={styles.featureButton} 
-        onPress={() => router.push('/trends')}
+        onPress={() => router.push('/')}
       >
         <Ionicons name="trending-up" size={50} color="#fff" />
-        <Text style={[styles.featureText, largeText && { fontSize: 26 }]}>View Trends</Text>
+        <Text style={[styles.featureText, largeText && { fontSize: 26 }]}>
+          {t.easyMode.viewTrends}
+        </Text>
       </TouchableOpacity>
 
       {/* Alerts */}
@@ -50,16 +59,20 @@ export default function EasyMode() {
         onPress={() => router.push('/alerts')}
       >
         <Ionicons name="notifications" size={50} color="#fff" />
-        <Text style={[styles.featureText, largeText && { fontSize: 26 }]}>Alerts</Text>
+        <Text style={[styles.featureText, largeText && { fontSize: 26 }]}>
+          {t.easyMode.alerts}
+        </Text>
       </TouchableOpacity>
 
       {/* Emergency Call */}
       <TouchableOpacity 
         style={[styles.featureButton, { backgroundColor: 'red' }]} 
-        onPress={() => Alert.alert("Emergency Help", "This would call a trusted contact or helpline.")}
+        onPress={() => Alert.alert(t.easyMode.emergencyTitle, t.easyMode.emergencyMessage)}
       >
         <Ionicons name="call" size={50} color="#fff" />
-        <Text style={[styles.featureText, largeText && { fontSize: 26 }]}>Emergency Help</Text>
+        <Text style={[styles.featureText, largeText && { fontSize: 26 }]}>
+          {t.easyMode.emergencyHelp}
+        </Text>
       </TouchableOpacity>
 
       {/* Settings */}
@@ -69,7 +82,7 @@ export default function EasyMode() {
           onPress={() => setLargeText(!largeText)}
         >
           <Text style={styles.toggleText}>
-            {largeText ? "🔎 Normal Text" : "🔎 Large Text"}
+            {largeText ? t.easyMode.normalText : t.easyMode.largeText}
           </Text>
         </TouchableOpacity>
 
@@ -78,7 +91,7 @@ export default function EasyMode() {
           onPress={() => setHighContrast(!highContrast)}
         >
           <Text style={styles.toggleText}>
-            {highContrast ? "🌈 Normal Mode" : "🌑 High Contrast"}
+            {highContrast ? t.easyMode.normalMode : t.easyMode.highContrast}
           </Text>
         </TouchableOpacity>
       </View>
@@ -89,7 +102,9 @@ export default function EasyMode() {
         onPress={() => router.back()}
       >
         <Ionicons name="arrow-back" size={40} color="#fff" />
-        <Text style={[styles.featureText, largeText && { fontSize: 26 }]}>Back to Home</Text>
+        <Text style={[styles.featureText, largeText && { fontSize: 26 }]}>
+          {t.easyMode.backToHome}
+        </Text>
       </TouchableOpacity>
     </ScrollView>
   );

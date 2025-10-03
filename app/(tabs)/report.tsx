@@ -1,19 +1,22 @@
+// app/(tabs)/report.tsx
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
+import { useLanguage } from '../../src/context/LanguageContext';
 
 export default function ReportScam() {
+  const { t } = useLanguage();
   const [message, setMessage] = useState('');
   const [image, setImage] = useState<string | null>(null);
 
   const handleSubmit = () => {
     if (!message && !image) {
-      Alert.alert("Error", "Please enter scam details or upload an image.");
+      Alert.alert(t.error, t.report.errorMessage);
       return;
     }
     // TODO: Send to backend or save locally
-    Alert.alert("✅ Thank You", "Your report has been submitted for review.");
+    Alert.alert(t.report.thankYou, t.report.reportSubmitted);
     setMessage('');
     setImage(null);
   };
@@ -31,34 +34,32 @@ export default function ReportScam() {
 
   return (
     <ScrollView style={styles.container}>
-      <Text style={styles.title}>📢 Report a Scam</Text>
-      <Text style={styles.subtitle}>
-        Help others stay safe by reporting suspicious messages or scam attempts.
-      </Text>
+      <Text style={styles.title}>{t.report.title}</Text>
+      <Text style={styles.subtitle}>{t.report.subtitle}</Text>
 
       {/* Message Input */}
-      <Text style={styles.label}>Scam Message Details</Text>
+      <Text style={styles.label}>{t.report.messageDetails}</Text>
       <TextInput
         style={styles.input}
-        placeholder="Paste suspicious SMS or describe the scam..."
+        placeholder={t.report.placeholder}
         value={message}
         onChangeText={setMessage}
         multiline
       />
 
       {/* Image Upload */}
-      <Text style={styles.label}>Upload Screenshot (optional)</Text>
+      <Text style={styles.label}>{t.report.uploadScreenshot}</Text>
       <TouchableOpacity style={styles.uploadButton} onPress={pickImage}>
         <Ionicons name="image-outline" size={24} color="#1E40AF" />
         <Text style={styles.uploadText}>
-          {image ? "Image Selected ✅" : "Choose an Image"}
+          {image ? t.report.imageSelected : t.report.chooseImage}
         </Text>
       </TouchableOpacity>
 
       {/* Submit */}
       <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
         <Ionicons name="send" size={24} color="#fff" />
-        <Text style={styles.submitText}>Submit Report</Text>
+        <Text style={styles.submitText}>{t.report.submitReport}</Text>
       </TouchableOpacity>
     </ScrollView>
   );

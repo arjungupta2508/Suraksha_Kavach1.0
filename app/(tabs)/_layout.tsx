@@ -1,7 +1,11 @@
+// app/(tabs)/_layout.tsx
 import { Tabs } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import { useLanguage } from '../../src/context/LanguageContext';
 
 export default function TabLayout() {
+  const { t } = useLanguage();
+  
   return (
     <Tabs
       screenOptions={{
@@ -28,7 +32,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Home',
+          title: t.tabs.home,
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="shield" size={size} color={color} />
           ),
@@ -39,7 +43,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="scan"
         options={{
-          title: 'Scan',
+          title: t.tabs.scan,
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="scan" size={size} color={color} />
           ),
@@ -50,7 +54,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="trends"
         options={{
-          title: 'Trends',
+          title: t.tabs.trends,
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="trending-up" size={size} color={color} />
           ),
@@ -61,7 +65,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="alerts"
         options={{
-          title: 'Alerts',
+          title: t.tabs.alerts,
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="notifications" size={size} color={color} />
           ),
@@ -72,7 +76,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="profile"
         options={{
-          title: 'Profile',
+          title: t.tabs.profile,
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="person" size={size} color={color} />
           ),

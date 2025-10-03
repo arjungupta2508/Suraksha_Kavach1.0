@@ -1,7 +1,9 @@
+// app/(tabs)/scan.tsx
 import React, { useState } from 'react';
 import { View, Text, ScrollView, StyleSheet, Alert, ActivityIndicator, TouchableOpacity } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import * as FileSystem from "expo-file-system/legacy";
+import { useLanguage } from '../../src/context/LanguageContext';
 
 interface ScamResult {
   isScam: boolean;
@@ -12,10 +14,30 @@ interface ScamResult {
 }
 
 export default function ScanScreen() {
+  const { t } = useLanguage();
   const [ocrText, setOcrText] = useState('');
   const [loading, setLoading] = useState(false);
   const [analyzing, setAnalyzing] = useState(false);
   const [scamResult, setScamResult] = useState<ScamResult | null>(null);
+
+  // Get localized recommendations
+  const getRecommendations = (isScam: boolean): string[] => {
+    if (isScam) {
+      return [
+        t.scan.rec1,
+        t.scan.rec2,
+        t.scan.rec3,
+        t.scan.rec4,
+        t.scan.rec5,
+      ];
+    } else {
+      return [
+        t.scan.rec6,
+        t.scan.rec7,
+        t.scan.rec8,
+      ];
+    }
+  };
 
   // ---------------- Scam Analysis ----------------
   const analyzeForScam = (text: string): ScamResult => {
@@ -46,20 +68,7 @@ export default function ScanScreen() {
 
     confidence = Math.min(confidence, 100);
     const isScam = confidence > 30;
-
-    const recommendations = isScam
-      ? [
-          "Do not click any links or download attachments",
-          "Never share personal or financial information",
-          "Verify with the company directly through official channels",
-          "Report this message to relevant authorities",
-          "Delete the message immediately",
-        ]
-      : [
-          "Message appears safe, but stay vigilant",
-          "Always verify unexpected requests",
-          "Keep your personal information private",
-        ];
+    const recommendations = getRecommendations(isScam);
 
     return { isScam, confidence, flags, category, recommendations };
   };
@@ -68,7 +77,7 @@ export default function ScanScreen() {
   const handleImageUpload = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== 'granted') {
-      Alert.alert('Permission required', 'Gallery access is needed to scan images. Please enable it in settings.');
+      Alert.alert(t.scan.permissionRequired, t.scan.galleryAccessNeeded);
       return;
     }
 
@@ -99,7 +108,7 @@ export default function ScanScreen() {
       const response = await fetch('https://api.ocr.space/parse/image', {
         method: 'POST',
         headers: {
-          apikey: "K88672750788957", // <-- Put your key here
+          apikey: "K88672750788957",
         },
         body: formData,
       });
@@ -118,20 +127,20 @@ export default function ScanScreen() {
         setAnalyzing(false);
 
         Alert.alert(
-          scamAnalysis.isScam ? '⚠️ Potential Scam Detected' : '✓ Scan Complete',
+          scamAnalysis.isScam ? t.scan.potentialScam : t.scan.scanComplete,
           scamAnalysis.isScam
-            ? `Risk Level: ${scamAnalysis.confidence}%\nCategory: ${scamAnalysis.category}`
-            : 'No scam indicators detected',
+            ? `${t.scan.riskLevel}: ${scamAnalysis.confidence}%\n${t.scan.category}: ${scamAnalysis.category}`
+            : t.scan.noScamDetected,
           [{ text: 'OK', style: 'default' }]
         );
       } else {
-        Alert.alert('No text found', 'Try another image');
+        Alert.alert(t.scan.noTextFound, t.scan.tryAnotherImage);
       }
     } catch (err) {
       console.error("OCR error:", err);
       setLoading(false);
       setAnalyzing(false);
-      Alert.alert('Error', 'Something went wrong while scanning the image.');
+      Alert.alert(t.error, t.scan.errorScanning);
     }
   };
 
@@ -143,21 +152,21 @@ export default function ScanScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Scam Detection Scanner</Text>
+      <Text style={styles.title}>{t.scan.title}</Text>
 
       <TouchableOpacity
         style={styles.uploadButton}
         onPress={handleImageUpload}
         disabled={loading || analyzing}
       >
-        <Text style={styles.uploadButtonText}>📷 Upload Screenshot & Scan</Text>
+        <Text style={styles.uploadButtonText}>{t.scan.uploadButton}</Text>
       </TouchableOpacity>
 
       {(loading || analyzing) && (
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color="#3B82F6" />
           <Text style={styles.loadingText}>
-            {loading ? 'Extracting text...' : 'Analyzing for scams...'}
+            {loading ? t.scan.extractingText : t.scan.analyzingScam}
           </Text>
         </View>
       )}
@@ -165,17 +174,19 @@ export default function ScanScreen() {
       {scamResult && (
         <View style={[styles.resultCard, { borderLeftColor: getRiskColor(scamResult.confidence) }]}>
           <View style={styles.resultHeader}>
-            <Text style={styles.resultTitle}>{scamResult.isScam ? '⚠️ Scam Alert' : '✓ Safe'}</Text>
+            <Text style={styles.resultTitle}>{scamResult.isScam ? t.scan.scamAlert : t.scan.safe}</Text>
             <View style={[styles.confidenceBadge, { backgroundColor: getRiskColor(scamResult.confidence) }]}>
-              <Text style={styles.confidenceText}>{scamResult.confidence}% Risk</Text>
+              <Text style={styles.confidenceText}>{scamResult.confidence}% {t.scan.risk}</Text>
             </View>
           </View>
 
-          {scamResult.category && <Text style={styles.category}>Category: {scamResult.category}</Text>}
+          {scamResult.category && (
+            <Text style={styles.category}>{t.scan.category}: {scamResult.category}</Text>
+          )}
 
           {scamResult.flags.length > 0 && (
             <View style={styles.section}>
-              <Text style={styles.sectionTitle}>🚩 Red Flags Detected:</Text>
+              <Text style={styles.sectionTitle}>{t.scan.redFlags}</Text>
               {scamResult.flags.map((flag, index) => (
                 <Text key={index} style={styles.flagItem}>• {flag}</Text>
               ))}
@@ -183,7 +194,7 @@ export default function ScanScreen() {
           )}
 
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>💡 Recommendations:</Text>
+            <Text style={styles.sectionTitle}>{t.scan.recommendations}</Text>
             {scamResult.recommendations.map((rec, index) => (
               <Text key={index} style={styles.recItem}>{index + 1}. {rec}</Text>
             ))}
@@ -192,14 +203,15 @@ export default function ScanScreen() {
       )}
 
       <ScrollView style={styles.textBox}>
-        <Text style={styles.textBoxTitle}>Extracted Text:</Text>
-        <Text selectable style={styles.extractedText}>{ocrText || 'No text extracted yet.'}</Text>
+        <Text style={styles.textBoxTitle}>{t.scan.extractedText}</Text>
+        <Text selectable style={styles.extractedText}>
+          {ocrText || t.scan.noTextExtracted}
+        </Text>
       </ScrollView>
     </View>
   );
 }
 
-// --------- styles remain same as your version ---------
 const styles = StyleSheet.create({
   container: { flex: 1, padding: 20, backgroundColor: '#F9FAFB' },
   title: { fontSize: 24, fontWeight: 'bold', color: '#1F2937', marginBottom: 20, textAlign: 'center' },

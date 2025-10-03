@@ -1,10 +1,13 @@
+// app/(tabs)/index.tsx
 import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Animated, Easing } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useEffect, useRef } from 'react';
+import { useLanguage } from '../../src/context/LanguageContext';
 
 export default function HomeScreen() {
   const router = useRouter();
+  const { t } = useLanguage();
   const scaleAnim = useRef(new Animated.Value(1)).current;
 
   useEffect(() => {
@@ -35,8 +38,8 @@ export default function HomeScreen() {
             <View style={styles.iconCircle}>
               <Ionicons name="shield-checkmark" size={40} color="#fff" />
             </View>
-            <Text style={styles.heroTitle}>Suraksha Kavach</Text>
-            <Text style={styles.heroSubtitle}>All systems operational</Text>
+            <Text style={styles.heroTitle}>{t.home.title}</Text>
+            <Text style={styles.heroSubtitle}>{t.home.subtitle}</Text>
           </View>
         </View>
 
@@ -44,65 +47,65 @@ export default function HomeScreen() {
         <View style={styles.statsContainer}>
           <View style={styles.statCard}>
             <Text style={styles.statNumber}>1,247</Text>
-            <Text style={styles.statLabel}>Scams Blocked</Text>
+            <Text style={styles.statLabel}>{t.home.scamsBlocked}</Text>
             <Ionicons name="shield" size={20} color="#1E40AF" style={styles.statIcon} />
           </View>
           <View style={styles.statCard}>
             <Text style={styles.statNumber}>₹2.3L</Text>
-            <Text style={styles.statLabel}>Money Saved</Text>
+            <Text style={styles.statLabel}>{t.home.moneySaved}</Text>
             <Ionicons name="cash" size={20} color="#10B981" style={styles.statIcon} />
           </View>
           <View style={styles.statCard}>
             <Text style={styles.statNumber}>50K+</Text>
-            <Text style={styles.statLabel}>Users Protected</Text>
+            <Text style={styles.statLabel}>{t.home.usersProtected}</Text>
             <Ionicons name="people" size={20} color="#F59E0B" style={styles.statIcon} />
           </View>
         </View>
 
         {/* Quick Actions */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Quick Actions</Text>
+          <Text style={styles.sectionTitle}>{t.home.quickActions}</Text>
           <View style={styles.actionGrid}>
             <TouchableOpacity style={styles.actionCard} onPress={() => router.push('/scan')}>
               <View style={[styles.actionIcon, { backgroundColor: '#EEF2FF' }]}>
                 <Ionicons name="scan" size={28} color="#1E40AF" />
               </View>
-              <Text style={styles.actionText}>Scan SMS</Text>
+              <Text style={styles.actionText}>{t.home.scanSMS}</Text>
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.actionCard} onPress={() => router.push('/scan')}>
               <View style={[styles.actionIcon, { backgroundColor: '#F0FDF4' }]}>
                 <Ionicons name="image" size={28} color="#10B981" />
               </View>
-              <Text style={styles.actionText}>Scan Image</Text>
+              <Text style={styles.actionText}>{t.home.scanImage}</Text>
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.actionCard} onPress={() => router.push('/report')}>
               <View style={[styles.actionIcon, { backgroundColor: '#FEE2E2' }]}>
                 <Ionicons name="alert-circle" size={28} color="#DC2626" />
               </View>
-              <Text style={styles.actionText}>Report Scam</Text>
+              <Text style={styles.actionText}>{t.home.reportScam}</Text>
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.actionCard} onPress={() => router.push('/alerts')}>
               <View style={[styles.actionIcon, { backgroundColor: '#FEF3C7' }]}>
                 <Ionicons name="notifications" size={28} color="#F59E0B" />
               </View>
-              <Text style={styles.actionText}>Alerts</Text>
+              <Text style={styles.actionText}>{t.home.alerts}</Text>
             </TouchableOpacity>
           </View>
         </View>
 
         {/* Recent Activity */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Recent Activity</Text>
+          <Text style={styles.sectionTitle}>{t.home.recentActivity}</Text>
           
           <View style={styles.activityCard}>
             <View style={styles.activityLeft}>
               <View style={[styles.activityDot, { backgroundColor: '#EF4444' }]} />
               <View>
-                <Text style={styles.activityTitle}>Bank OTP Scam Blocked</Text>
-                <Text style={styles.activityTime}>2 hours ago</Text>
+                <Text style={styles.activityTitle}>{t.home.bankOTPBlocked}</Text>
+                <Text style={styles.activityTime}>2 {t.home.hoursAgo}</Text>
               </View>
             </View>
             <Text style={styles.activityRisk}>95%</Text>
@@ -112,8 +115,8 @@ export default function HomeScreen() {
             <View style={styles.activityLeft}>
               <View style={[styles.activityDot, { backgroundColor: '#F59E0B' }]} />
               <View>
-                <Text style={styles.activityTitle}>Lottery Winner Message</Text>
-                <Text style={styles.activityTime}>5 hours ago</Text>
+                <Text style={styles.activityTitle}>{t.home.lotteryMessage}</Text>
+                <Text style={styles.activityTime}>5 {t.home.hoursAgo}</Text>
               </View>
             </View>
             <Text style={styles.activityRisk}>68%</Text>
@@ -123,8 +126,8 @@ export default function HomeScreen() {
             <View style={styles.activityLeft}>
               <View style={[styles.activityDot, { backgroundColor: '#10B981' }]} />
               <View>
-                <Text style={styles.activityTitle}>Delivery OTP - Safe</Text>
-                <Text style={styles.activityTime}>Yesterday</Text>
+                <Text style={styles.activityTitle}>{t.home.deliverySafe}</Text>
+                <Text style={styles.activityTime}>{t.home.yesterday}</Text>
               </View>
             </View>
             <Text style={styles.activityRisk}>12%</Text>
@@ -135,10 +138,8 @@ export default function HomeScreen() {
         <View style={styles.tipCard}>
           <Ionicons name="bulb" size={24} color="#F59E0B" />
           <View style={styles.tipContent}>
-            <Text style={styles.tipTitle}>💡 Tip of the Day</Text>
-            <Text style={styles.tipText}>
-              Never share your OTP with anyone, not even bank officials. Real banks never ask for OTP.
-            </Text>
+            <Text style={styles.tipTitle}>{t.home.tipOfTheDay}</Text>
+            <Text style={styles.tipText}>{t.home.tipText}</Text>
           </View>
         </View>
       </ScrollView>
@@ -147,7 +148,7 @@ export default function HomeScreen() {
       <Animated.View style={[styles.magnifiedButton, { transform: [{ scale: scaleAnim }] }]}>
         <TouchableOpacity style={styles.magnifiedInner} onPress={() => router.push('/easyMode')}>
           <Ionicons name="accessibility" size={36} color="#fff" style={{ marginRight: 10 }} />
-          <Text style={styles.magnifiedButtonText}>👵 Easy Mode</Text>
+          <Text style={styles.magnifiedButtonText}>{t.home.easyMode}</Text>
         </TouchableOpacity>
       </Animated.View>
     </View>
@@ -220,8 +221,6 @@ const styles = StyleSheet.create({
   tipContent: { flex: 1 },
   tipTitle: { fontSize: 14, fontWeight: 'bold', color: '#92400E', marginBottom: 4 },
   tipText: { fontSize: 13, color: '#78350F', lineHeight: 18 },
-
-  // Animated Easy Mode Button
   magnifiedButton: {
     position: 'absolute',
     bottom: 30,

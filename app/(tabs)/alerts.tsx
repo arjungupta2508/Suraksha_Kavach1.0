@@ -1,10 +1,13 @@
+// app/(tabs)/alerts.tsx
 import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Switch } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useState } from 'react';
+import { useLanguage } from '../../src/context/LanguageContext';
 
 export default function AlertsScreen() {
   const router = useRouter();
+  const { t } = useLanguage();
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
   const [soundEnabled, setSoundEnabled] = useState(true);
   const [highRiskOnly, setHighRiskOnly] = useState(false);
@@ -13,54 +16,54 @@ export default function AlertsScreen() {
     {
       id: 1,
       type: 'critical',
-      title: 'Bank OTP Scam Detected',
-      message: 'Message claiming to be from HDFC Bank asking for OTP verification',
-      time: '2 hours ago',
+      titleKey: 'bankOTPScam',
+      messageKey: 'bankOTPMessage',
+      time: `2 ${t.alerts.hoursAgo}`,
       risk: 95,
       icon: 'alert-circle',
     },
     {
       id: 2,
       type: 'warning',
-      title: 'Suspicious Payment Link',
-      message: 'UPI payment link from unknown sender detected',
-      time: '4 hours ago',
+      titleKey: 'suspiciousLink',
+      messageKey: 'suspiciousLinkMessage',
+      time: `4 ${t.alerts.hoursAgo}`,
       risk: 78,
       icon: 'warning',
     },
     {
       id: 3,
       type: 'info',
-      title: 'New Scam Alert',
-      message: 'KYC update scams are trending in your area',
-      time: '6 hours ago',
+      titleKey: 'newScamAlert',
+      messageKey: 'newScamMessage',
+      time: `6 ${t.alerts.hoursAgo}`,
       risk: 0,
       icon: 'information-circle',
     },
     {
       id: 4,
       type: 'critical',
-      title: 'Lottery Winner Scam',
-      message: 'Message claiming lottery prize of ₹25 lakhs detected',
-      time: 'Yesterday',
+      titleKey: 'lotteryScam',
+      messageKey: 'lotteryScamMessage',
+      time: t.alerts.yesterday,
       risk: 89,
       icon: 'alert-circle',
     },
     {
       id: 5,
       type: 'warning',
-      title: 'Job Offer Verification',
-      message: 'Suspicious job offer asking for registration fee',
-      time: 'Yesterday',
+      titleKey: 'jobOfferVerification',
+      messageKey: 'jobOfferMessage',
+      time: t.alerts.yesterday,
       risk: 72,
       icon: 'warning',
     },
     {
       id: 6,
       type: 'info',
-      title: 'Weekly Security Tip',
-      message: 'Never share your banking credentials with anyone',
-      time: '2 days ago',
+      titleKey: 'weeklyTip',
+      messageKey: 'weeklyTipMessage',
+      time: `2 ${t.alerts.daysAgo}`,
       risk: 0,
       icon: 'bulb',
     },
@@ -84,7 +87,7 @@ export default function AlertsScreen() {
         <TouchableOpacity onPress={() => router.back()}>
           <Ionicons name="arrow-back" size={24} color="#1F2937" />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Alerts</Text>
+        <Text style={styles.headerTitle}>{t.alerts.title}</Text>
         <View style={{ width: 24 }} />
       </View>
 
@@ -96,7 +99,7 @@ export default function AlertsScreen() {
               <Ionicons name="alert-circle" size={24} color="#EF4444" />
             </View>
             <Text style={styles.summaryNumber}>3</Text>
-            <Text style={styles.summaryLabel}>Critical</Text>
+            <Text style={styles.summaryLabel}>{t.alerts.critical}</Text>
           </View>
           
           <View style={styles.summaryItem}>
@@ -104,7 +107,7 @@ export default function AlertsScreen() {
               <Ionicons name="warning" size={24} color="#F59E0B" />
             </View>
             <Text style={styles.summaryNumber}>8</Text>
-            <Text style={styles.summaryLabel}>Warnings</Text>
+            <Text style={styles.summaryLabel}>{t.alerts.warnings}</Text>
           </View>
           
           <View style={styles.summaryItem}>
@@ -112,19 +115,19 @@ export default function AlertsScreen() {
               <Ionicons name="information-circle" size={24} color="#1E40AF" />
             </View>
             <Text style={styles.summaryNumber}>12</Text>
-            <Text style={styles.summaryLabel}>Info</Text>
+            <Text style={styles.summaryLabel}>{t.alerts.info}</Text>
           </View>
         </View>
       </View>
 
       {/* Notification Settings */}
       <View style={styles.settingsCard}>
-        <Text style={styles.settingsTitle}>Notification Settings</Text>
+        <Text style={styles.settingsTitle}>{t.alerts.notificationSettings}</Text>
         
         <View style={styles.settingItem}>
           <View style={styles.settingLeft}>
             <Ionicons name="notifications" size={20} color="#1E40AF" />
-            <Text style={styles.settingText}>Push Notifications</Text>
+            <Text style={styles.settingText}>{t.alerts.pushNotifications}</Text>
           </View>
           <Switch
             value={notificationsEnabled}
@@ -137,7 +140,7 @@ export default function AlertsScreen() {
         <View style={styles.settingItem}>
           <View style={styles.settingLeft}>
             <Ionicons name="volume-high" size={20} color="#1E40AF" />
-            <Text style={styles.settingText}>Sound Alerts</Text>
+            <Text style={styles.settingText}>{t.alerts.soundAlerts}</Text>
           </View>
           <Switch
             value={soundEnabled}
@@ -150,7 +153,7 @@ export default function AlertsScreen() {
         <View style={styles.settingItem}>
           <View style={styles.settingLeft}>
             <Ionicons name="filter" size={20} color="#1E40AF" />
-            <Text style={styles.settingText}>High Risk Only</Text>
+            <Text style={styles.settingText}>{t.alerts.highRiskOnly}</Text>
           </View>
           <Switch
             value={highRiskOnly}
@@ -163,7 +166,7 @@ export default function AlertsScreen() {
 
       {/* Recent Alerts */}
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Recent Alerts</Text>
+        <Text style={styles.sectionTitle}>{t.alerts.recentAlerts}</Text>
         
         {alerts.map((alert) => {
           const colors = getAlertColor(alert.type);
@@ -175,7 +178,9 @@ export default function AlertsScreen() {
               
               <View style={styles.alertContent}>
                 <View style={styles.alertHeader}>
-                  <Text style={styles.alertTitle}>{alert.title}</Text>
+                  <Text style={styles.alertTitle}>
+                    {t.alerts[alert.titleKey as keyof typeof t.alerts]}
+                  </Text>
                   {alert.risk > 0 && (
                     <View style={[styles.riskBadge, { backgroundColor: colors.bg }]}>
                       <Text style={[styles.riskText, { color: colors.color }]}>
@@ -184,7 +189,9 @@ export default function AlertsScreen() {
                     </View>
                   )}
                 </View>
-                <Text style={styles.alertMessage}>{alert.message}</Text>
+                <Text style={styles.alertMessage}>
+                  {t.alerts[alert.messageKey as keyof typeof t.alerts]}
+                </Text>
                 <Text style={styles.alertTime}>{alert.time}</Text>
               </View>
               
@@ -198,14 +205,14 @@ export default function AlertsScreen() {
       <View style={styles.actionsCard}>
         <TouchableOpacity style={styles.actionButton}>
           <Ionicons name="trash-outline" size={20} color="#EF4444" />
-          <Text style={styles.actionButtonText}>Clear All Alerts</Text>
+          <Text style={styles.actionButtonText}>{t.alerts.clearAllAlerts}</Text>
         </TouchableOpacity>
         
         <View style={styles.actionDivider} />
         
         <TouchableOpacity style={styles.actionButton}>
           <Ionicons name="checkmark-done" size={20} color="#10B981" />
-          <Text style={styles.actionButtonText}>Mark All as Read</Text>
+          <Text style={styles.actionButtonText}>{t.alerts.markAllRead}</Text>
         </TouchableOpacity>
       </View>
     </ScrollView>
