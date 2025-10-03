@@ -1,202 +1,171 @@
+import { StyleSheet, Text, View, ScrollView, TouchableOpacity, TextInput, Alert } from 'react-native';
+import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useState } from 'react';
-import { Alert, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
-
-// Simple scam detection function
-function detectScam(message: string) {
-  const lowerMsg = message.toLowerCase();
-  let score = 0;
-  const flags: string[] = [];
-
-  // Scam keywords
-  const keywords = ['urgent', 'verify', 'blocked', 'winner', 'prize', 'otp', 'click here', 'expire', 'suspend', 'congratulations'];
-  keywords.forEach(keyword => {
-    if (lowerMsg.includes(keyword)) {
-      score += 15;
-      flags.push(`"${keyword}"`);
-    }
-  });
-
-  // Check for URLs
-  if (/http|www\.|bit\.ly/i.test(message)) {
-    score += 25;
-    flags.push('Suspicious link');
-  }
-
-  // Check for phone numbers
-  if (/\d{10}/.test(message)) {
-    score += 10;
-    flags.push('Phone number');
-  }
-
-  // Check for money
-  if (/₹|rs\.|rupees/i.test(message)) {
-    score += 15;
-    flags.push('Money amount');
-  }
-
-  score = Math.min(score, 100);
-  const status = score >= 50 ? 'scam' : score >= 30 ? 'suspicious' : 'safe';
-
-  return { score, status, flags };
-}
 
 export default function ScanScreen() {
+  const router = useRouter();
   const [message, setMessage] = useState('');
+  const [scanning, setScanning] = useState(false);
   const [result, setResult] = useState<any>(null);
-  const [isScanning, setIsScanning] = useState(false);
 
-  const handleScan = () => {
+  const analyzeMessage = () => {
     if (!message.trim()) {
-      Alert.alert('Empty Message', 'Please enter a message to scan');
+      Alert.alert('Error', 'Please enter a message to scan');
       return;
     }
 
-    setIsScanning(true);
+    setScanning(true);
+    
+    // Simulate AI analysis
     setTimeout(() => {
-      const scanResult = detectScam(message);
-      setResult(scanResult);
-      setIsScanning(false);
-    }, 1000);
+      const keywords = ['otp', 'urgent', 'click', 'verify', 'account', 'suspended', 'lottery', 'winner', 'prize'];
+      const lowerMessage = message.toLowerCase();
+      const foundKeywords = keywords.filter(k => lowerMessage.includes(k));
+      
+      const riskScore = Math.min(95, foundKeywords.length * 15 + Math.random() * 20);
+      const isScam = riskScore > 60;
+
+      setResult({
+        score: Math.round(riskScore),
+        isScam,
+        keywords: foundKeywords,
+        analysis: isScam 
+          ? 'High risk of scam detected. Do not respond or click any links.'
+          : 'Message appears safe. However, always verify sender identity.'
+      });
+      setScanning(false);
+    }, 2000);
   };
 
-  const clearAll = () => {
+  const clearScan = () => {
     setMessage('');
     setResult(null);
-  };
-
-  const samples = [
-    {
-      title: '🚨 Bank Scam',
-      text: 'URGENT: Your account will be blocked in 24 hours. Click here to verify: http://fake-bank.com or call 9876543210'
-    },
-    {
-      title: '🎁 Lottery Scam',
-      text: 'Congratulations! You won Rs. 50,000 in KBC lottery. Share OTP to claim prize now!'
-    },
-    {
-      title: '✅ Safe Message',
-      text: 'Hi, this is a reminder about our meeting tomorrow at 3 PM. See you there!'
-    }
-  ];
-
-  const getStatusColor = () => {
-    if (!result) return '#F3F4F6';
-    return result.status === 'scam' ? '#FEE2E2' : result.status === 'suspicious' ? '#FEF3C7' : '#D1FAE5';
-  };
-
-  const getStatusTextColor = () => {
-    if (!result) return '#000';
-    return result.status === 'scam' ? '#991B1B' : result.status === 'suspicious' ? '#92400E' : '#065F46';
-  };
-
-  const getStatusIcon = () => {
-    if (!result) return null;
-    return result.status === 'scam' ? '🚨' : result.status === 'suspicious' ? '⚠️' : '✅';
   };
 
   return (
     <ScrollView style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>Scan for Scams</Text>
-        <Text style={styles.headerSubtitle}>Paste any suspicious message below</Text>
+        <TouchableOpacity onPress={() => router.back()}>
+          <Ionicons name="arrow-back" size={24} color="#1F2937" />
+        </TouchableOpacity>
+        <Text style={styles.headerTitle}>Scan Message</Text>
+        <View style={{ width: 24 }} />
       </View>
 
-      {/* Input Area */}
-      <View style={styles.inputContainer}>
+      {/* Scanner Card */}
+      <View style={styles.scannerCard}>
+        <View style={styles.scannerHeader}>
+          <Ionicons name="shield-checkmark" size={32} color="#1E40AF" />
+          <Text style={styles.scannerTitle}>AI-Powered Scam Detection</Text>
+        </View>
+        
+        <Text style={styles.inputLabel}>Paste your message below:</Text>
         <TextInput
-          style={styles.input}
-          placeholder="Paste suspicious message here..."
+          style={styles.textInput}
+          placeholder="Enter SMS, WhatsApp, or email message..."
           placeholderTextColor="#9CA3AF"
           multiline
+          numberOfLines={6}
           value={message}
           onChangeText={setMessage}
           textAlignVertical="top"
         />
-        {message.length > 0 && (
-          <TouchableOpacity style={styles.clearButton} onPress={clearAll}>
-            <Ionicons name="close-circle" size={24} color="#6B7280" />
-          </TouchableOpacity>
-        )}
-      </View>
 
-      {/* Buttons */}
-      <View style={styles.buttonRow}>
         <TouchableOpacity 
-          style={[styles.scanButton, (!message.trim() || isScanning) && styles.scanButtonDisabled]}
-          onPress={handleScan}
-          disabled={!message.trim() || isScanning}
+          style={[styles.scanButton, scanning && styles.scanButtonDisabled]}
+          onPress={analyzeMessage}
+          disabled={scanning}
         >
           <Ionicons name="scan" size={20} color="#fff" />
           <Text style={styles.scanButtonText}>
-            {isScanning ? 'Scanning...' : 'Scan Message'}
+            {scanning ? 'Analyzing...' : 'Scan Message'}
           </Text>
         </TouchableOpacity>
       </View>
 
-      {/* Result */}
+      {/* Results */}
       {result && (
-        <View style={[styles.resultCard, { backgroundColor: getStatusColor() }]}>
-          <View style={styles.resultHeader}>
-            <Text style={styles.resultIcon}>{getStatusIcon()}</Text>
-            <Text style={[styles.resultStatus, { color: getStatusTextColor() }]}>
-              {result.status.toUpperCase()}
+        <View style={styles.resultCard}>
+          <View style={[
+            styles.resultHeader,
+            { backgroundColor: result.isScam ? '#FEE2E2' : '#D1FAE5' }
+          ]}>
+            <Ionicons 
+              name={result.isScam ? "alert-circle" : "checkmark-circle"} 
+              size={48} 
+              color={result.isScam ? "#EF4444" : "#10B981"} 
+            />
+            <Text style={[
+              styles.riskScore,
+              { color: result.isScam ? "#EF4444" : "#10B981" }
+            ]}>
+              {result.score}% Risk
+            </Text>
+            <Text style={styles.verdict}>
+              {result.isScam ? 'SCAM DETECTED' : 'LIKELY SAFE'}
             </Text>
           </View>
 
-          <View style={styles.scoreContainer}>
-            <Text style={[styles.scoreLabel, { color: getStatusTextColor() }]}>Risk Score</Text>
-            <Text style={[styles.scoreValue, { color: getStatusTextColor() }]}>{result.score}%</Text>
-          </View>
+          <View style={styles.resultBody}>
+            <Text style={styles.analysisTitle}>Analysis:</Text>
+            <Text style={styles.analysisText}>{result.analysis}</Text>
 
-          {result.flags.length > 0 && (
-            <View style={styles.flagsContainer}>
-              <Text style={[styles.flagsTitle, { color: getStatusTextColor() }]}>
-                ⚡ Detected Patterns:
-              </Text>
-              {result.flags.map((flag: string, idx: number) => (
-                <Text key={idx} style={[styles.flag, { color: getStatusTextColor() }]}>
-                  • Contains {flag}
-                </Text>
-              ))}
-            </View>
-          )}
+            {result.keywords.length > 0 && (
+              <>
+                <Text style={styles.keywordsTitle}>Suspicious Keywords:</Text>
+                <View style={styles.keywordContainer}>
+                  {result.keywords.map((keyword: string, index: number) => (
+                    <View key={index} style={styles.keywordBadge}>
+                      <Text style={styles.keywordText}>{keyword}</Text>
+                    </View>
+                  ))}
+                </View>
+              </>
+            )}
 
-          <View style={styles.recommendationBox}>
-            <Text style={[styles.recommendationTitle, { color: getStatusTextColor() }]}>
-              What to do:
-            </Text>
-            <Text style={[styles.recommendation, { color: getStatusTextColor() }]}>
-              {result.status === 'scam' 
-                ? '🚨 DELETE immediately! Do not click any links or share information.'
-                : result.status === 'suspicious'
-                ? '⚠️ BE CAUTIOUS! Verify sender before taking action.'
-                : '✅ Message appears safe. Always stay vigilant.'}
-            </Text>
+            <TouchableOpacity style={styles.clearButton} onPress={clearScan}>
+              <Text style={styles.clearButtonText}>Scan Another Message</Text>
+            </TouchableOpacity>
           </View>
         </View>
       )}
 
-      {/* Sample Messages */}
-      <View style={styles.samplesSection}>
-        <Text style={styles.samplesTitle}>📝 Try Sample Messages:</Text>
-        {samples.map((sample, idx) => (
-          <TouchableOpacity
-            key={idx}
-            style={styles.sampleCard}
-            onPress={() => {
-              setMessage(sample.text);
-              setResult(null);
-            }}
-          >
-            <Text style={styles.sampleTitle}>{sample.title}</Text>
-            <Text style={styles.sampleText} numberOfLines={2}>
-              {sample.text}
-            </Text>
-          </TouchableOpacity>
-        ))}
+      {/* Quick Tips */}
+      <View style={styles.tipsSection}>
+        <Text style={styles.tipsTitle}>🛡️ Safety Tips</Text>
+        
+        <View style={styles.tipItem}>
+          <Ionicons name="close-circle" size={20} color="#EF4444" />
+          <Text style={styles.tipText}>Never share OTP or passwords</Text>
+        </View>
+        
+        <View style={styles.tipItem}>
+          <Ionicons name="close-circle" size={20} color="#EF4444" />
+          <Text style={styles.tipText}>Don't click suspicious links</Text>
+        </View>
+        
+        <View style={styles.tipItem}>
+          <Ionicons name="close-circle" size={20} color="#EF4444" />
+          <Text style={styles.tipText}>Banks never ask for PIN/CVV</Text>
+        </View>
+        
+        <View style={styles.tipItem}>
+          <Ionicons name="checkmark-circle" size={20} color="#10B981" />
+          <Text style={styles.tipText}>Verify sender before responding</Text>
+        </View>
       </View>
+
+      {/* Image Scanner Option */}
+      <TouchableOpacity style={styles.imageOption}>
+        <Ionicons name="image-outline" size={24} color="#1E40AF" />
+        <View style={{ flex: 1 }}>
+          <Text style={styles.imageOptionTitle}>Scan Screenshot</Text>
+          <Text style={styles.imageOptionSubtitle}>Upload image to analyze</Text>
+        </View>
+        <Ionicons name="chevron-forward" size={24} color="#9CA3AF" />
+      </TouchableOpacity>
     </ScrollView>
   );
 }
@@ -207,42 +176,49 @@ const styles = StyleSheet.create({
     backgroundColor: '#F9FAFB',
   },
   header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: 16,
     backgroundColor: '#fff',
-    padding: 20,
     borderBottomWidth: 1,
     borderBottomColor: '#E5E7EB',
   },
   headerTitle: {
-    fontSize: 24,
+    fontSize: 18,
     fontWeight: 'bold',
     color: '#1F2937',
-    marginBottom: 4,
   },
-  headerSubtitle: {
-    fontSize: 14,
-    color: '#6B7280',
-  },
-  inputContainer: {
-    margin: 16,
-    position: 'relative',
-  },
-  input: {
+  scannerCard: {
     backgroundColor: '#fff',
-    borderWidth: 2,
-    borderColor: '#E5E7EB',
-    borderRadius: 12,
-    padding: 16,
-    fontSize: 16,
+    margin: 16,
+    padding: 20,
+    borderRadius: 16,
+  },
+  scannerHeader: {
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  scannerTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
     color: '#1F2937',
-    minHeight: 150,
+    marginTop: 8,
   },
-  clearButton: {
-    position: 'absolute',
-    top: 12,
-    right: 12,
+  inputLabel: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#4B5563',
+    marginBottom: 8,
   },
-  buttonRow: {
-    paddingHorizontal: 16,
+  textInput: {
+    borderWidth: 1,
+    borderColor: '#D1D5DB',
+    borderRadius: 12,
+    padding: 12,
+    fontSize: 14,
+    color: '#1F2937',
+    minHeight: 120,
     marginBottom: 16,
   },
   scanButton: {
@@ -255,7 +231,7 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   scanButtonDisabled: {
-    backgroundColor: '#9CA3AF',
+    opacity: 0.6,
   },
   scanButtonText: {
     color: '#fff',
@@ -263,93 +239,116 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   resultCard: {
+    backgroundColor: '#fff',
+    marginHorizontal: 16,
+    marginBottom: 16,
+    borderRadius: 16,
+    overflow: 'hidden',
+  },
+  resultHeader: {
+    padding: 24,
+    alignItems: 'center',
+  },
+  riskScore: {
+    fontSize: 36,
+    fontWeight: 'bold',
+    marginTop: 12,
+  },
+  verdict: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#1F2937',
+    marginTop: 4,
+  },
+  resultBody: {
+    padding: 20,
+  },
+  analysisTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#1F2937',
+    marginBottom: 8,
+  },
+  analysisText: {
+    fontSize: 14,
+    color: '#4B5563',
+    lineHeight: 20,
+    marginBottom: 16,
+  },
+  keywordsTitle: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#1F2937',
+    marginBottom: 8,
+  },
+  keywordContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+    marginBottom: 16,
+  },
+  keywordBadge: {
+    backgroundColor: '#FEE2E2',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 16,
+  },
+  keywordText: {
+    fontSize: 12,
+    color: '#EF4444',
+    fontWeight: '600',
+  },
+  clearButton: {
+    backgroundColor: '#F3F4F6',
+    padding: 12,
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  clearButtonText: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#4B5563',
+  },
+  tipsSection: {
+    backgroundColor: '#fff',
     margin: 16,
     padding: 20,
     borderRadius: 16,
   },
-  resultHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 16,
-    gap: 8,
-  },
-  resultIcon: {
-    fontSize: 32,
-  },
-  resultStatus: {
-    fontSize: 28,
-    fontWeight: 'bold',
-  },
-  scoreContainer: {
-    alignItems: 'center',
-    marginBottom: 20,
-    paddingVertical: 12,
-    borderTopWidth: 1,
-    borderBottomWidth: 1,
-    borderColor: 'rgba(0,0,0,0.1)',
-  },
-  scoreLabel: {
-    fontSize: 14,
-    fontWeight: '600',
-    marginBottom: 4,
-  },
-  scoreValue: {
-    fontSize: 40,
-    fontWeight: 'bold',
-  },
-  flagsContainer: {
-    marginBottom: 16,
-  },
-  flagsTitle: {
+  tipsTitle: {
     fontSize: 16,
     fontWeight: 'bold',
-    marginBottom: 8,
-  },
-  flag: {
-    fontSize: 14,
-    marginBottom: 4,
-  },
-  recommendationBox: {
-    backgroundColor: 'rgba(255,255,255,0.5)',
-    padding: 16,
-    borderRadius: 12,
-  },
-  recommendationTitle: {
-    fontSize: 14,
-    fontWeight: 'bold',
-    marginBottom: 8,
-  },
-  recommendation: {
-    fontSize: 14,
-    lineHeight: 20,
-  },
-  samplesSection: {
-    padding: 16,
-  },
-  samplesTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
     color: '#1F2937',
+    marginBottom: 16,
+  },
+  tipItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
     marginBottom: 12,
   },
-  sampleCard: {
+  tipText: {
+    fontSize: 14,
+    color: '#4B5563',
+    flex: 1,
+  },
+  imageOption: {
     backgroundColor: '#fff',
+    marginHorizontal: 16,
+    marginBottom: 16,
     padding: 16,
     borderRadius: 12,
-    marginBottom: 12,
-    borderWidth: 1,
-    borderColor: '#E5E7EB',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
   },
-  sampleTitle: {
+  imageOptionTitle: {
     fontSize: 14,
-    fontWeight: 'bold',
-    color: '#1E40AF',
-    marginBottom: 8,
+    fontWeight: '600',
+    color: '#1F2937',
   },
-  sampleText: {
-    fontSize: 13,
+  imageOptionSubtitle: {
+    fontSize: 12,
     color: '#6B7280',
-    lineHeight: 18,
   },
 });

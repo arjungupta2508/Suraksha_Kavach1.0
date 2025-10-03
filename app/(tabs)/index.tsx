@@ -13,7 +13,7 @@ export default function HomeScreen() {
           <View style={styles.iconCircle}>
             <Ionicons name="shield-checkmark" size={40} color="#fff" />
           </View>
-          <Text style={styles.heroTitle}>Protection Active</Text>
+          <Text style={styles.heroTitle}>Suraksha Kavach</Text>
           <Text style={styles.heroSubtitle}>All systems operational</Text>
         </View>
       </View>

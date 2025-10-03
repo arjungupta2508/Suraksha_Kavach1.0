@@ -3,6 +3,7 @@
     "name": "suraksha-kavach",
     "slug": "suraksha-kavach",
     "version": "1.0.0",
+    "entryPoint": "./app.tsx",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "surakshakavach",
