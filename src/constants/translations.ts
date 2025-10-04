@@ -34,6 +34,9 @@ export const translations = {
       deliverySafe: 'Delivery OTP - Safe',
       hoursAgo: 'hours ago',
       yesterday: 'Yesterday',
+      emergency: 'Emergency',
+      needHelpNow: 'Need Help Now?',
+      accessEmergency: 'Quick access to emergency help',
     },
     
     // Scan Screen
@@ -59,7 +62,6 @@ export const translations = {
       errorScanning: 'Something went wrong while scanning the image.',
       permissionRequired: 'Permission required',
       galleryAccessNeeded: 'Gallery access is needed to scan images. Please enable it in settings.',
-      // Recommendations
       rec1: 'Do not click any links or download attachments',
       rec2: 'Never share personal or financial information',
       rec3: 'Verify with the company directly through official channels',
@@ -83,7 +85,6 @@ export const translations = {
       recentAlerts: 'Recent Alerts',
       clearAllAlerts: 'Clear All Alerts',
       markAllRead: 'Mark All as Read',
-      // Alert messages
       bankOTPScam: 'Bank OTP Scam Detected',
       bankOTPMessage: 'Message claiming to be from HDFC Bank asking for OTP verification',
       suspiciousLink: 'Suspicious Payment Link',
@@ -163,6 +164,86 @@ export const translations = {
       backToHome: 'Back to Home',
     },
     
+    // Emergency Screen
+    emergency: {
+      title: 'Emergency Actions',
+      subtitle: 'Quick response to cyber fraud',
+      lastReported: 'Last reported',
+      criticalActions: '🚨 Critical Actions',
+      quickActions: '⚡ Quick Actions',
+      safetyTips: '🛡 Quick Safety Tips',
+      importantNumbers: '📞 Important Numbers',
+      
+      // Critical Actions
+      callHelpline1930: 'Call Helpline 1930',
+      helpline247: '24/7 Cybercrime helpline',
+      reportToCybercrimePortal: 'Report to Cybercrime Portal',
+      officialGovtReporting: 'Official govt. reporting',
+      checkTransactionStatus: 'Check Transaction Status',
+      forFraudulentPayments: 'For fraudulent payments',
+      
+      // Quick Actions
+      reportFraudSMSCall: 'Report Fraud SMS/Call',
+      blockScammerNumber: 'Block Scammer Number',
+      shareScamAlert: 'Share Scam Alert',
+      emergencyBankContacts: 'Emergency Bank Contacts',
+      
+      // Safety Tips
+      tip1: '✓ Report within 24 hours for best results',
+      tip2: '✓ Take screenshots of scam messages',
+      tip3: '✓ Note down scammer\'s number/details',
+      tip4: '✓ Never pay ransom or additional fees',
+      tip5: '✓ Contact bank immediately if money sent',
+      
+      // Important Numbers Labels
+      cybercrimeHelpline: 'Cybercrime Helpline',
+      fraudSMSReporting: 'Fraud SMS Reporting',
+      womenHelpline: 'Women Helpline',
+      seniorCitizenHelpline: 'Senior Citizen Helpline',
+      
+      // Alert Messages
+      callHelplineTitle: '📞 Call Cybercrime Helpline',
+      callHelplineMessage: 'Dial 1930 for immediate assistance with cyber fraud and scams.',
+      callNow: 'Call Now',
+      
+      reportCybercrimeTitle: '🚨 Report Cyber Crime',
+      reportCybercrimeMessage: 'You will be redirected to the National Cybercrime Reporting Portal (cybercrime.gov.in)',
+      openPortal: 'Open Portal',
+      cannotOpenBrowser: 'Cannot open browser',
+      
+      reportFraudTitle: '📱 Report Fraud SMS/Call',
+      reportFraudMessage: 'Forward suspicious SMS to 1909 or report via TRAI DND app',
+      smsTo1909: 'SMS to 1909',
+      openTRAIApp: 'Open TRAI App',
+      
+      blockNumberTitle: '🚫 Block Scammer Number',
+      blockNumberMessage: 'Enter the phone number you want to block:',
+      block: 'Block',
+      numberBlocked: 'Number Blocked',
+      numberBlockedMessage: 'has been added to your block list. You can manage blocked numbers in your phone settings.',
+      openSettings: 'Open Settings',
+      toBlock: 'To block',
+      blockInstructions: '1. Open Phone app\n2. Find the number\n3. Tap info (i)\n4. Scroll down and tap "Block this Caller"',
+      invalidNumber: 'Invalid Number',
+      enterValidNumber: 'Please enter a valid phone number',
+      
+      shareAlertTitle: 'Scam Alert - Stay Safe!',
+      shareAlertMessage: '⚠ SCAM ALERT ⚠\n\nI detected a potential scam and wanted to warn you!\n\n🚨 Stay Safe:\n• Never share OTP/passwords\n• Don\'t click suspicious links\n• Verify before making payments\n• Report scams to 1930\n\nStay protected with Suraksha Kavach app!',
+      shared: '✓ Shared',
+      sharedSuccess: 'Scam alert shared successfully!',
+      couldNotShare: 'Could not share alert',
+      
+      checkTransactionTitle: '💳 Check Transaction Status',
+      checkTransactionMessage: 'If you made a fraudulent payment, check status immediately:',
+      upiComplaints: 'UPI Complaints',
+      reportToBank: 'Report to Bank',
+      contactBankTitle: 'Contact Your Bank',
+      contactBankMessage: 'Call your bank immediately:\n\n• SBI: 1800 1234\n• HDFC: 1800 266 4332\n• ICICI: 1860 120 7777\n• Axis: 1860 419 5555\n• PNB: 1800 180 2222\n\nReport the fraudulent transaction within 24 hours.',
+      
+      emergencyBankTitle: '🏦 Emergency Bank Contacts',
+      emergencyBankMessage: 'Select your bank to get helpline number:',
+    },
+    
     // Tab Navigation
     tabs: {
       home: 'Home',
@@ -170,6 +251,7 @@ export const translations = {
       trends: 'Trends',
       alerts: 'Alerts',
       profile: 'Profile',
+      emergency: 'Emergency',
     },
   },
   
@@ -204,6 +286,9 @@ export const translations = {
       deliverySafe: 'डिलीवरी OTP - सुरक्षित',
       hoursAgo: 'घंटे पहले',
       yesterday: 'कल',
+      emergency: 'आपातकाल',
+      needHelpNow: 'अभी मदद चाहिए?',
+      accessEmergency: 'आपातकालीन सहायता तक त्वरित पहुंच',
     },
     
     // Scan Screen
@@ -229,7 +314,6 @@ export const translations = {
       errorScanning: 'इमेज स्कैन करते समय कुछ गलत हो गया।',
       permissionRequired: 'अनुमति आवश्यक',
       galleryAccessNeeded: 'इमेज स्कैन करने के लिए गैलरी एक्सेस की आवश्यकता है। कृपया इसे सेटिंग्स में सक्षम करें।',
-      // Recommendations
       rec1: 'किसी भी लिंक पर क्लिक न करें या अटैचमेंट डाउनलोड न करें',
       rec2: 'व्यक्तिगत या वित्तीय जानकारी कभी साझा न करें',
       rec3: 'आधिकारिक चैनलों के माध्यम से सीधे कंपनी से सत्यापित करें',
@@ -253,7 +337,6 @@ export const translations = {
       recentAlerts: 'हाल के अलर्ट',
       clearAllAlerts: 'सभी अलर्ट साफ़ करें',
       markAllRead: 'सभी को पढ़ा हुआ चिह्नित करें',
-      // Alert messages
       bankOTPScam: 'बैंक OTP स्कैम पाया गया',
       bankOTPMessage: 'HDFC बैंक से होने का दावा करने वाला संदेश OTP सत्यापन मांग रहा है',
       suspiciousLink: 'संदिग्ध भुगतान लिंक',
@@ -333,6 +416,86 @@ export const translations = {
       backToHome: 'होम पर वापस',
     },
     
+    // Emergency Screen
+    emergency: {
+      title: 'आपातकालीन कार्रवाई',
+      subtitle: 'साइबर धोखाधड़ी के लिए त्वरित प्रतिक्रिया',
+      lastReported: 'अंतिम रिपोर्ट',
+      criticalActions: '🚨 महत्वपूर्ण कार्रवाई',
+      quickActions: '⚡ त्वरित कार्रवाई',
+      safetyTips: '🛡 त्वरित सुरक्षा टिप्स',
+      importantNumbers: '📞 महत्वपूर्ण नंबर',
+      
+      // Critical Actions
+      callHelpline1930: 'हेल्पलाइन 1930 पर कॉल करें',
+      helpline247: '24/7 साइबर क्राइम हेल्पलाइन',
+      reportToCybercrimePortal: 'साइबर क्राइम पोर्टल पर रिपोर्ट करें',
+      officialGovtReporting: 'आधिकारिक सरकारी रिपोर्टिंग',
+      checkTransactionStatus: 'लेनदेन स्थिति जांचें',
+      forFraudulentPayments: 'धोखाधड़ी भुगतान के लिए',
+      
+      // Quick Actions
+      reportFraudSMSCall: 'धोखाधड़ी SMS/कॉल रिपोर्ट करें',
+      blockScammerNumber: 'स्कैमर नंबर ब्लॉक करें',
+      shareScamAlert: 'स्कैम अलर्ट साझा करें',
+      emergencyBankContacts: 'आपातकालीन बैंक संपर्क',
+      
+      // Safety Tips
+      tip1: '✓ सर्वोत्तम परिणामों के लिए 24 घंटे के भीतर रिपोर्ट करें',
+      tip2: '✓ स्कैम संदेशों के स्क्रीनशॉट लें',
+      tip3: '✓ स्कैमर का नंबर/विवरण नोट करें',
+      tip4: '✓ कभी भी फिरौती या अतिरिक्त शुल्क न दें',
+      tip5: '✓ पैसे भेजे जाने पर तुरंत बैंक से संपर्क करें',
+      
+      // Important Numbers Labels
+      cybercrimeHelpline: 'साइबर क्राइम हेल्पलाइन',
+      fraudSMSReporting: 'धोखाधड़ी SMS रिपोर्टिंग',
+      womenHelpline: 'महिला हेल्पलाइन',
+      seniorCitizenHelpline: 'वरिष्ठ नागरिक हेल्पलाइन',
+      
+      // Alert Messages
+      callHelplineTitle: '📞 साइबर क्राइम हेल्पलाइन कॉल करें',
+      callHelplineMessage: 'साइबर धोखाधड़ी और स्कैम के लिए तत्काल सहायता के लिए 1930 डायल करें।',
+      callNow: 'अभी कॉल करें',
+      
+      reportCybercrimeTitle: '🚨 साइबर क्राइम रिपोर्ट करें',
+      reportCybercrimeMessage: 'आपको राष्ट्रीय साइबर क्राइम रिपोर्टिंग पोर्टल (cybercrime.gov.in) पर रीडायरेक्ट किया जाएगा',
+      openPortal: 'पोर्टल खोलें',
+      cannotOpenBrowser: 'ब्राउज़र नहीं खोल सकते',
+      
+      reportFraudTitle: '📱 धोखाधड़ी SMS/कॉल रिपोर्ट करें',
+      reportFraudMessage: 'संदिग्ध SMS को 1909 पर फॉरवर्ड करें या TRAI DND ऐप के माध्यम से रिपोर्ट करें',
+      smsTo1909: '1909 पर SMS',
+      openTRAIApp: 'TRAI ऐप खोलें',
+      
+      blockNumberTitle: '🚫 स्कैमर नंबर ब्लॉक करें',
+      blockNumberMessage: 'वह फोन नंबर दर्ज करें जिसे आप ब्लॉक करना चाहते हैं:',
+      block: 'ब्लॉक करें',
+      numberBlocked: 'नंबर ब्लॉक किया गया',
+      numberBlockedMessage: 'को आपकी ब्लॉक सूची में जोड़ा गया है। आप अपनी फोन सेटिंग्स में ब्लॉक किए गए नंबरों को प्रबंधित कर सकते हैं।',
+      openSettings: 'सेटिंग्स खोलें',
+      toBlock: 'ब्लॉक करने के लिए',
+      blockInstructions: '1. फोन ऐप खोलें\n2. नंबर खोजें\n3. जानकारी (i) टैप करें\n4. नीचे स्क्रॉल करें और "इस कॉलर को ब्लॉक करें" टैप करें',
+      invalidNumber: 'अमान्य नंबर',
+      enterValidNumber: 'कृपया एक मान्य फोन नंबर दर्ज करें',
+      
+      shareAlertTitle: 'स्कैम अलर्ट - सुरक्षित रहें!',
+      shareAlertMessage: '⚠ स्कैम अलर्ट ⚠\n\nमैंने एक संभावित स्कैम का पता लगाया और आपको चेतावनी देना चाहता था!\n\n🚨 सुरक्षित रहें:\n• कभी भी OTP/पासवर्ड साझा न करें\n• संदिग्ध लिंक पर क्लिक न करें\n• भुगतान करने से पहले सत्यापित करें\n• 1930 पर स्कैम रिपोर्ट करें\n\nसुरक्षा कवच ऐप से सुरक्षित रहें!',
+      shared: '✓ साझा किया गया',
+      sharedSuccess: 'स्कैम अलर्ट सफलतापूर्वक साझा किया गया!',
+      couldNotShare: 'अलर्ट साझा नहीं कर सके',
+      
+      checkTransactionTitle: '💳 लेनदेन स्थिति जांचें',
+      checkTransactionMessage: 'यदि आपने धोखाधड़ी भुगतान किया है, तो तुरंत स्थिति जांचें:',
+      upiComplaints: 'UPI शिकायतें',
+      reportToBank: 'बैंक को रिपोर्ट करें',
+      contactBankTitle: 'अपने बैंक से संपर्क करें',
+      contactBankMessage: 'तुरंत अपने बैंक को कॉल करें:\n\n• SBI: 1800 1234\n• HDFC: 1800 266 4332\n• ICICI: 1860 120 7777\n• Axis: 1860 419 5555\n• PNB: 1800 180 2222\n\n24 घंटे के भीतर धोखाधड़ी लेनदेन की रिपोर्ट करें।',
+      
+      emergencyBankTitle: '🏦 आपातकालीन बैंक संपर्क',
+      emergencyBankMessage: 'हेल्पलाइन नंबर प्राप्त करने के लिए अपना बैंक चुनें:',
+    },
+    
     // Tab Navigation
     tabs: {
       home: 'होम',
@@ -340,6 +503,7 @@ export const translations = {
       trends: 'ट्रेंड',
       alerts: 'अलर्ट',
       profile: 'प्रोफ़ाइल',
+      emergency: 'आपातकाल',
     },
   },
 };

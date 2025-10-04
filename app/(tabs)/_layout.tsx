@@ -50,13 +50,13 @@ export default function TabLayout() {
         }}
       />
 
-      {/* Trends Tab */}
+      {/* Emergency Tab */}
       <Tabs.Screen
-        name="trends"
+        name="emergency"
         options={{
-          title: t.tabs.trends,
+          title: t.tabs.emergency,
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="trending-up" size={size} color={color} />
+            <Ionicons name="alert-circle" size={size} color={color} />
           ),
         }}
       />
@@ -80,6 +80,26 @@ export default function TabLayout() {
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="person" size={size} color={color} />
           ),
+        }}
+      />
+
+      {/* Hide other screens from tab bar */}
+      <Tabs.Screen
+        name="trends"
+        options={{
+          href: null, // This hides it from the tab bar
+        }}
+      />
+      <Tabs.Screen
+        name="report"
+        options={{
+          href: null,
+        }}
+      />
+      <Tabs.Screen
+        name="easyMode"
+        options={{
+          href: null,
         }}
       />
     </Tabs>
