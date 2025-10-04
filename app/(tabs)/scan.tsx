@@ -1,6 +1,6 @@
 // app/(tabs)/scan.tsx
 import React, { useState } from 'react';
-import { View, Text, ScrollView, StyleSheet, Alert, ActivityIndicator, TouchableOpacity } from 'react-native';
+import { View, Text, ScrollView, StyleSheet, Alert, ActivityIndicator, TouchableOpacity, TextInput } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import * as FileSystem from "expo-file-system/legacy";
 import { useLanguage } from '../../src/context/LanguageContext';
@@ -13,33 +13,23 @@ interface ScamResult {
   recommendations: string[];
 }
 
-export default function ScanScreen() {
+export default function ScanScreen({ route }: any) {
   const { t } = useLanguage();
   const [ocrText, setOcrText] = useState('');
   const [loading, setLoading] = useState(false);
   const [analyzing, setAnalyzing] = useState(false);
   const [scamResult, setScamResult] = useState<ScamResult | null>(null);
+  const [mode, setMode] = useState(route?.params?.mode || "image");
+  const [smsInput, setSmsInput] = useState("");
 
-  // Get localized recommendations
   const getRecommendations = (isScam: boolean): string[] => {
     if (isScam) {
-      return [
-        t.scan.rec1,
-        t.scan.rec2,
-        t.scan.rec3,
-        t.scan.rec4,
-        t.scan.rec5,
-      ];
+      return [t.scan.rec1, t.scan.rec2, t.scan.rec3, t.scan.rec4, t.scan.rec5];
     } else {
-      return [
-        t.scan.rec6,
-        t.scan.rec7,
-        t.scan.rec8,
-      ];
+      return [t.scan.rec6, t.scan.rec7, t.scan.rec8];
     }
   };
 
-  // ---------------- Scam Analysis ----------------
   const analyzeForScam = (text: string): ScamResult => {
     const flags: string[] = [];
     let confidence = 0;
@@ -73,7 +63,26 @@ export default function ScanScreen() {
     return { isScam, confidence, flags, category, recommendations };
   };
 
-  // ---------------- Handle Image Upload ----------------
+  const handleAnalyzeSMS = () => {
+    if (!smsInput.trim()) {
+      Alert.alert(t.scan.noTextFound, "Please paste SMS text first.");
+      return;
+    }
+    setOcrText(smsInput.trim());
+    setAnalyzing(true);
+    const scamAnalysis = analyzeForScam(smsInput.trim());
+    setScamResult(scamAnalysis);
+    setAnalyzing(false);
+
+    Alert.alert(
+      scamAnalysis.isScam ? t.scan.potentialScam : t.scan.scanComplete,
+      scamAnalysis.isScam
+        ? `${t.scan.riskLevel}: ${scamAnalysis.confidence}%\n${t.scan.category}: ${scamAnalysis.category}`
+        : t.scan.noScamDetected,
+      [{ text: 'OK', style: 'default' }]
+    );
+  };
+
   const handleImageUpload = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== 'granted') {
@@ -89,17 +98,12 @@ export default function ScanScreen() {
     if (result.canceled || !result.assets || result.assets.length === 0) return;
 
     const uri = result.assets[0].uri;
-    console.log("📸 Picked image:", uri);
-
     setLoading(true);
     setOcrText('');
     setScamResult(null);
 
     try {
-      // Convert to base64
       const imageData = await FileSystem.readAsStringAsync(uri, { encoding: 'base64' });
-
-      // Call OCR.Space API
       const formData = new FormData();
       formData.append('base64Image', `data:image/jpeg;base64,${imageData}`);
       formData.append('language', 'eng');
@@ -107,15 +111,11 @@ export default function ScanScreen() {
 
       const response = await fetch('https://api.ocr.space/parse/image', {
         method: 'POST',
-        headers: {
-          apikey: "K88672750788957",
-        },
+        headers: { apikey: "K88672750788957" },
         body: formData,
       });
 
       const data = await response.json();
-      console.log("OCR Response:", data);
-
       const extracted = data?.ParsedResults?.[0]?.ParsedText?.trim() || '';
       setOcrText(extracted);
       setLoading(false);
@@ -154,13 +154,48 @@ export default function ScanScreen() {
     <View style={styles.container}>
       <Text style={styles.title}>{t.scan.title}</Text>
 
-      <TouchableOpacity
-        style={styles.uploadButton}
-        onPress={handleImageUpload}
-        disabled={loading || analyzing}
-      >
-        <Text style={styles.uploadButtonText}>{t.scan.uploadButton}</Text>
-      </TouchableOpacity>
+      {/* Mode Toggle */}
+      <View style={styles.modeToggle}>
+        <TouchableOpacity
+          style={[styles.modeButton, mode === "image" && styles.modeActive]}
+          onPress={() => setMode("image")}
+        >
+          <Text style={styles.modeButtonText}>Upload Image</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.modeButton, mode === "sms" && styles.modeActive]}
+          onPress={() => setMode("sms")}
+        >
+          <Text style={styles.modeButtonText}>Paste SMS</Text>
+        </TouchableOpacity>
+      </View>
+
+      {mode === "image" ? (
+        <TouchableOpacity
+          style={styles.uploadButton}
+          onPress={handleImageUpload}
+          disabled={loading || analyzing}
+        >
+          <Text style={styles.uploadButtonText}>{t.scan.uploadButton}</Text>
+        </TouchableOpacity>
+      ) : (
+        <View style={{ marginBottom: 20 }}>
+          <TextInput
+            style={styles.smsInput}
+            multiline
+            placeholder="Paste SMS message here..."
+            value={smsInput}
+            onChangeText={setSmsInput}
+          />
+          <TouchableOpacity
+            style={styles.uploadButton}
+            onPress={handleAnalyzeSMS}
+            disabled={analyzing}
+          >
+            <Text style={styles.uploadButtonText}>Analyze SMS</Text>
+          </TouchableOpacity>
+        </View>
+      )}
 
       {(loading || analyzing) && (
         <View style={styles.loadingContainer}>
@@ -232,4 +267,11 @@ const styles = StyleSheet.create({
   textBox: { backgroundColor: '#fff', borderRadius: 12, padding: 16, maxHeight: 250 },
   textBoxTitle: { fontSize: 14, fontWeight: '600', color: '#374151', marginBottom: 8 },
   extractedText: { fontSize: 13, color: '#1F2937', lineHeight: 20 },
+
+  // new styles
+  modeToggle: { flexDirection: 'row', justifyContent: 'center', marginBottom: 20 },
+  modeButton: { padding: 12, marginHorizontal: 5, borderRadius: 8, backgroundColor: '#E5E7EB' },
+  modeActive: { backgroundColor: '#3B82F6' },
+  modeButtonText: { color: '#fff', fontWeight: '600' },
+  smsInput: { backgroundColor: '#fff', borderRadius: 8, padding: 12, minHeight: 100, textAlignVertical: 'top', marginBottom: 10 },
 });

@@ -8,6 +8,22 @@ export default function HomeScreen() {
   const router = useRouter();
   const { t } = useLanguage();
 
+  const navigateToEmergency = () => {
+    router.push('/emergency' as any);
+  };
+
+  const navigateToScanSMS = () => {
+    router.push({ pathname: "/scan", params: { mode: "sms" } } as any);
+  };
+
+  const navigateToScanImage = () => {
+    router.push({ pathname: "/scan", params: { mode: "image" } } as any);
+  };
+
+  const navigateToEasyMode = () => {
+    router.push('/easyMode' as any);
+  };
+
   return (
     <ScrollView style={styles.container}>
       {/* Hero Card */}
@@ -20,6 +36,23 @@ export default function HomeScreen() {
           <Text style={styles.heroSubtitle}>{t.home.subtitle}</Text>
         </View>
       </View>
+
+      {/* Easy Mode Banner - NEW */}
+      <TouchableOpacity 
+        style={styles.easyModeBanner}
+        onPress={navigateToEasyMode}
+      >
+        <View style={styles.easyModeLeft}>
+          <View style={styles.easyModeIcon}>
+            <Ionicons name="hand-left" size={28} color="#F59E0B" />
+          </View>
+          <View>
+            <Text style={styles.easyModeTitle}>{t.home.easyMode}</Text>
+            <Text style={styles.easyModeSubtitle}>Simplified interface for seniors</Text>
+          </View>
+        </View>
+        <Ionicons name="chevron-forward" size={24} color="#F59E0B" />
+      </TouchableOpacity>
 
       {/* Stats Grid */}
       <View style={styles.statsContainer}>
@@ -46,7 +79,7 @@ export default function HomeScreen() {
         <View style={styles.actionGrid}>
           <TouchableOpacity 
             style={styles.actionCard}
-            onPress={() => router.push('/scan')}
+            onPress={navigateToScanSMS}
           >
             <View style={[styles.actionIcon, { backgroundColor: '#EEF2FF' }]}>
               <Ionicons name="scan" size={28} color="#1E40AF" />
@@ -56,7 +89,7 @@ export default function HomeScreen() {
 
           <TouchableOpacity 
             style={styles.actionCard}
-            onPress={() => router.push('/scan')}
+            onPress={navigateToScanImage}
           >
             <View style={[styles.actionIcon, { backgroundColor: '#F0FDF4' }]}>
               <Ionicons name="image" size={28} color="#10B981" />
@@ -66,12 +99,22 @@ export default function HomeScreen() {
 
           <TouchableOpacity 
             style={styles.actionCard}
-            onPress={() => router.push('/emergency')}
+            onPress={navigateToEmergency}
           >
             <View style={[styles.actionIcon, { backgroundColor: '#FEE2E2' }]}>
               <Ionicons name="warning" size={28} color="#EF4444" />
             </View>
             <Text style={styles.actionText}>{t.home.emergency}</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity 
+            style={styles.actionCard}
+            onPress={navigateToEasyMode}
+          >
+            <View style={[styles.actionIcon, { backgroundColor: '#FEF3C7' }]}>
+              <Ionicons name="hand-left" size={28} color="#F59E0B" />
+            </View>
+            <Text style={styles.actionText}>{t.home.easyMode}</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -79,7 +122,7 @@ export default function HomeScreen() {
       {/* Emergency Banner */}
       <TouchableOpacity 
         style={styles.emergencyBanner}
-        onPress={() => router.push('/emergency')}
+        onPress={navigateToEmergency}
       >
         <View style={styles.emergencyLeft}>
           <View style={styles.emergencyIcon}>
@@ -144,195 +187,42 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#F9FAFB',
-  },
-  heroCard: {
-    backgroundColor: '#1E40AF',
-    margin: 16,
-    borderRadius: 20,
-    padding: 32,
-    alignItems: 'center',
-  },
-  heroContent: {
-    alignItems: 'center',
-  },
-  iconCircle: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    backgroundColor: 'rgba(255,255,255,0.2)',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 16,
-  },
-  heroTitle: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    color: '#fff',
-    marginBottom: 8,
-  },
-  heroSubtitle: {
-    fontSize: 14,
-    color: 'rgba(255,255,255,0.8)',
-  },
-  statsContainer: {
-    flexDirection: 'row',
-    paddingHorizontal: 16,
-    gap: 12,
-    marginBottom: 24,
-  },
-  statCard: {
-    flex: 1,
-    backgroundColor: '#fff',
-    padding: 16,
-    borderRadius: 12,
-    alignItems: 'center',
-  },
-  statNumber: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#1F2937',
-    marginBottom: 4,
-  },
-  statLabel: {
-    fontSize: 11,
-    color: '#6B7280',
-    textAlign: 'center',
-  },
-  statIcon: {
-    marginTop: 8,
-  },
-  section: {
-    paddingHorizontal: 16,
-    marginBottom: 24,
-  },
-  sectionTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#1F2937',
-    marginBottom: 12,
-  },
-  actionGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 12,
-  },
-  actionCard: {
-    width: '47%',
-    backgroundColor: '#fff',
-    padding: 20,
-    borderRadius: 12,
-    alignItems: 'center',
-  },
-  actionIcon: {
-    width: 56,
-    height: 56,
-    borderRadius: 28,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 12,
-  },
-  actionText: {
-    fontSize: 13,
-    fontWeight: '600',
-    color: '#1F2937',
-  },
-  emergencyBanner: {
-    backgroundColor: '#FEE2E2',
-    marginHorizontal: 16,
-    marginBottom: 24,
-    padding: 16,
-    borderRadius: 12,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    borderWidth: 2,
-    borderColor: '#FCA5A5',
-  },
-  emergencyLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    flex: 1,
-  },
-  emergencyIcon: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginRight: 12,
-  },
-  emergencyTitle: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#991B1B',
-    marginBottom: 2,
-  },
-  emergencySubtitle: {
-    fontSize: 12,
-    color: '#B91C1C',
-  },
-  activityCard: {
-    backgroundColor: '#fff',
-    padding: 16,
-    borderRadius: 12,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 8,
-  },
-  activityLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-    flex: 1,
-  },
-  activityDot: {
-    width: 12,
-    height: 12,
-    borderRadius: 6,
-  },
-  activityTitle: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#1F2937',
-    marginBottom: 2,
-  },
-  activityTime: {
-    fontSize: 12,
-    color: '#9CA3AF',
-  },
-  activityRisk: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#6B7280',
-  },
-  tipCard: {
-    backgroundColor: '#FFFBEB',
-    margin: 16,
-    padding: 16,
-    borderRadius: 12,
-    flexDirection: 'row',
-    gap: 12,
-    borderWidth: 1,
-    borderColor: '#FEF3C7',
-    marginBottom: 32,
-  },
-  tipContent: {
-    flex: 1,
-  },
-  tipTitle: {
-    fontSize: 14,
-    fontWeight: 'bold',
-    color: '#92400E',
-    marginBottom: 4,
-  },
-  tipText: {
-    fontSize: 13,
-    color: '#78350F',
-    lineHeight: 18,
-  },
+  // ⚠️ keep same styles as before
+  container: { flex: 1, backgroundColor: '#F9FAFB' },
+  heroCard: { backgroundColor: '#1E40AF', margin: 16, borderRadius: 20, padding: 32, alignItems: 'center' },
+  heroContent: { alignItems: 'center' },
+  iconCircle: { width: 80, height: 80, borderRadius: 40, backgroundColor: 'rgba(255,255,255,0.2)', alignItems: 'center', justifyContent: 'center', marginBottom: 16 },
+  heroTitle: { fontSize: 28, fontWeight: 'bold', color: '#fff', marginBottom: 8 },
+  heroSubtitle: { fontSize: 14, color: 'rgba(255,255,255,0.8)' },
+  easyModeBanner: { backgroundColor: '#FFFBEB', marginHorizontal: 16, marginBottom: 16, padding: 16, borderRadius: 12, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', borderWidth: 2, borderColor: '#FEF3C7' },
+  easyModeLeft: { flexDirection: 'row', alignItems: 'center', flex: 1 },
+  easyModeIcon: { width: 48, height: 48, borderRadius: 24, backgroundColor: '#fff', alignItems: 'center', justifyContent: 'center', marginRight: 12 },
+  easyModeTitle: { fontSize: 16, fontWeight: 'bold', color: '#92400E', marginBottom: 2 },
+  easyModeSubtitle: { fontSize: 12, color: '#78350F' },
+  statsContainer: { flexDirection: 'row', paddingHorizontal: 16, gap: 12, marginBottom: 24 },
+  statCard: { flex: 1, backgroundColor: '#fff', padding: 16, borderRadius: 12, alignItems: 'center' },
+  statNumber: { fontSize: 24, fontWeight: 'bold', color: '#1F2937', marginBottom: 4 },
+  statLabel: { fontSize: 11, color: '#6B7280', textAlign: 'center' },
+  statIcon: { marginTop: 8 },
+  section: { paddingHorizontal: 16, marginBottom: 24 },
+  sectionTitle: { fontSize: 20, fontWeight: 'bold', color: '#1F2937', marginBottom: 12 },
+  actionGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 12 },
+  actionCard: { width: '47%', backgroundColor: '#fff', padding: 20, borderRadius: 12, alignItems: 'center' },
+  actionIcon: { width: 56, height: 56, borderRadius: 28, alignItems: 'center', justifyContent: 'center', marginBottom: 12 },
+  actionText: { fontSize: 13, fontWeight: '600', color: '#1F2937' },
+  emergencyBanner: { backgroundColor: '#FEE2E2', marginHorizontal: 16, marginBottom: 24, padding: 16, borderRadius: 12, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', borderWidth: 2, borderColor: '#FCA5A5' },
+  emergencyLeft: { flexDirection: 'row', alignItems: 'center', flex: 1 },
+  emergencyIcon: { width: 48, height: 48, borderRadius: 24, backgroundColor: '#fff', alignItems: 'center', justifyContent: 'center', marginRight: 12 },
+  emergencyTitle: { fontSize: 16, fontWeight: 'bold', color: '#991B1B', marginBottom: 2 },
+  emergencySubtitle: { fontSize: 12, color: '#B91C1C' },
+  activityCard: { backgroundColor: '#fff', padding: 16, borderRadius: 12, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 },
+  activityLeft: { flexDirection: 'row', alignItems: 'center', gap: 12, flex: 1 },
+  activityDot: { width: 12, height: 12, borderRadius: 6 },
+  activityTitle: { fontSize: 14, fontWeight: '600', color: '#1F2937', marginBottom: 2 },
+  activityTime: { fontSize: 12, color: '#9CA3AF' },
+  activityRisk: { fontSize: 16, fontWeight: 'bold', color: '#6B7280' },
+  tipCard: { backgroundColor: '#FFFBEB', margin: 16, padding: 16, borderRadius: 12, flexDirection: 'row', gap: 12, borderWidth: 1, borderColor: '#FEF3C7', marginBottom: 32 },
+  tipContent: { flex: 1 },
+  tipTitle: { fontSize: 14, fontWeight: 'bold', color: '#92400E', marginBottom: 4 },
+  tipText: { fontSize: 13, color: '#78350F', lineHeight: 18 },
 });
